@@ -33,9 +33,10 @@ class RedisCache {
   }
 
   fetch(path, request) {
-    if (!this.connected) { return; }
+    if (!this.connected || request.headers['cache-warm-country'] ) { return; }
 
     let key = this.cacheKey(path, request);
+	this.ui.writeLine(`>>>> fastboot-redis-cache: ${key}`);
 
     return new Promise((res, rej) => {
       this.client.get(key, (err, reply) => {
